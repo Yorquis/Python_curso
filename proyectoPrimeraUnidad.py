@@ -1,19 +1,35 @@
-from datetime import datetime
+#RETO 1 - Proyecto de Investigación Científica en Python
 
-listaDeExperimentos = [
-    ["experimento1", "16/11/2024","quimica", [5,4,3,2,1]],
-    ["experimento2", "16/11/2024","Fisica", [8,9,10,11]],
-    ["experimento3", "17/11/2024","Ciencias Naturales", [7,6,5,4,3]],
-    ["experimento4", "18/11/2024","Biologia", [9,8,7,6,5]],
+#objetivos Recopilación de datos experimentales
+#analisis de resultados experimentales
+#generacion de un informe final
+#validacion y manejo de errores
+#interaccion mediante un meno de opciones
+
+from datetime import datetime
+# se crea un lista de experimentos que contiene informacion sobre distintos experimentos a realizar,
+#cada elemento de la lista es a su vez una sublista que reperesnta el experimento
+#con los datos correspondientes como nombre, fecha, tipo y resultados
+listaDeExperimentos = [ 
+    ["experimento1", "16/11/2024", "quimica", [5, 4, 3, 2, 1]],
+    ["experimento2", "16/11/2024", "Fisica", [8, 9, 10, 11]],
+    ["experimento3", "17/11/2024", "Ciencias Naturales", [7, 6, 5, 4, 3]],
+    ["experimento4", "18/11/2024", "Biologia", [9, 8, 7, 6, 5]],
 ]
 
-class Experimentos:
+# se crea la funcion de inicializacion usando el metodo constructor para 
+# escrbir parametros que se puedan reescribir varias veces y almacenar diferente informacion
+class Experimento:
     def __init__(self, nombre, fechaExperimento, tipo, resultados):
         self.nombre = nombre
         self.fechaExperimento = fechaExperimento
         self.tipo = tipo
         self.resultados = resultados
-        
+
+# se crea la Funcion para agregar un experimento
+# la cual perimite crear un objeto y lo agrega a la lista de experimentos
+#solicita informacion sobre el experimento y valida los datos ingresados
+#y los agrega a la lista
 def agregar_experimento(listaDeExperimentos):
     try:
         nombre = input("Ingrese el nombre del experimento: ")
@@ -32,33 +48,17 @@ def agregar_experimento(listaDeExperimentos):
         print("Experimento agregado correctamente.")
     except Exception as e:
         print(f"Error al agregar el experimento: {e}")
+        
 
-def eliminar_experimento(listaDeExperimentos):
-   
-    # Solicitar el nombre del experimento a eliminar
-    nombre = input("Ingrese el nombre del experimento que desea eliminar: ")
-
-    # Buscar el índice del experimento en la lista
-    for experimento in listaDeExperimentos:
-        if experimento[0] == nombre:  # Comparar el nombre del experimento
-            listaDeExperimentos.remove(experimento)  # Eliminar el experimento usando su índice
-            print(f"El experimento '{nombre}' ha sido eliminado correctamente.")
-            return  # Salir de la función tras eliminar el experimento
-    
-    # Si no se encontró el experimento, informar al usuario
-    print(f"Error: No se encontró un experimento con el nombre '{nombre}'.")
-
-    #permite eliminar un experimento
-    #dificultad 1: requiere la funcion agregar experimento
-
+#la funcion visualizar experimentos permite como su nombre lo indica
+#visualizar en la consola una lista detallada de los experimentos 
+#registrados previamente, en caso de no haber experimentos informa al usuario que no
+#se encuentra  ningun registro
 def visualizar_experimentos(listaDeExperimentos):
-    
-    # Verificar si la lista de experimentos está vacía
     if not listaDeExperimentos:
         print("No hay experimentos registrados. Agregue al menos uno antes de visualizar.")
         return
 
-    # Mostrar los experimentos de forma organizada
     print("\nLista de experimentos registrados:")
     for i, experimento in enumerate(listaDeExperimentos, start=1):
         nombre, fecha, tipo, resultados = experimento
@@ -67,11 +67,22 @@ def visualizar_experimentos(listaDeExperimentos):
         print(f"  Fecha: {fecha}")
         print(f"  Tipo: {tipo}")
         print(f"  Resultados: {resultados}")
+        
+#la funcion eliminar experimento permite como su nombre lo indica
+#eliminar un experimento especifico de la lsita basado en su nombre
+#y porteriormente se notifica al usuario de que ha sido eleiminado
+def eliminar_experimento(listaDeExperimentos):
+    nombre = input("Ingrese el nombre del experimento que desea eliminar: ")
 
+    for experimento in listaDeExperimentos:
+        if experimento[0] == nombre:
+            listaDeExperimentos.remove(experimento)
+            print(f"El experimento '{nombre}' ha sido eliminado correctamente.")
+            return
+    print(f"Error: No se encontró un experimento con el nombre '{nombre}'.")
 
-# calcular estadisticas basicas (promedios, maximos y minimos de un experimento)
-   #dificultad 2. requiere el uso de funciones agregar_experimeentos
-    
+#esta funcion permite el calculo de estadisticas como promedio, valor maximo, valor minimo
+#de los resultados registrados en los experimentos de la lsita
 def calcular_estadisticasExperimento(listaDeExperimentos):
     visualizar_experimentos(listaDeExperimentos)
     try:
@@ -90,6 +101,8 @@ def calcular_estadisticasExperimento(listaDeExperimentos):
     except ValueError:
         print("Error: Entrada inválida.")
 
+#la funcion compara experimentos permite comparar los promedios
+#de los experimentos seleccionados, evidenciando los promedios de menor a mayor
 def comparar_experimentos(listaDeExperimentos):
     visualizar_experimentos(listaDeExperimentos)
     try:
@@ -107,64 +120,62 @@ def comparar_experimentos(listaDeExperimentos):
         for index, promedio in resultados_comparados:
             print(f"{index + 1}. {listaDeExperimentos[index][0]} - Promedio: {promedio}")
     except ValueError:
-        print("Error: Entrada inválida.")        
-        
+        print("Error: Entrada inválida.")
+# esta funcion genera un archivo de texto que contiene infoormacion
+#de los experimentos registrados en la lista
+#cada experimento se presenta con datos como nombre, fecha, tipo y resultados
 def generar_informe(listaDeExperimentos):
     if not listaDeExperimentos:
         print("No hay experimentos registrados. Agregue al menos uno antes de generar el informe.")
         return
-    
-     # Abrir un archivo txt para escribir el informe
+
     with open("informe_experimento.txt", "w") as archivo:
-        # Escribir los detalles de la tarea en el archivo
-        for tarea in listaDeExperimentos:
-            archivo.write(f"Nombre: {tarea[0]}\n")
-            archivo.write(f"Fecha: {tarea[1]}\n")
-            archivo.write(f"Categoría: {tarea[2]}\n")
-            archivo.write(f"Resultado: {tarea[3]}\n")
+        for experimento in listaDeExperimentos:
+            archivo.write(f"Nombre: {experimento[0]}\n")
+            archivo.write(f"Fecha: {experimento[1]}\n")
+            archivo.write(f"Tipo: {experimento[2]}\n")
+            archivo.write(f"Resultados: {experimento[3]}\n")
             archivo.write("\n")
 
     print("Informe generado como 'informe_experimento.txt'.")
-       
-    #gererar un infoeme resumen de los experimentos y sus estadisticas. difiultad 3
-    #requiere el suso de funciones visualizar_experimentos y calcular_estadisticas
-   
-
+#La función mostrar_menu proporciona un menú interactivo 
+# para gestionar experimentos y realizar diversas operaciones relacionadas con ellos. 
+# Permite al usuario seleccionar opciones para agregar, visualizar, eliminar experimentos, 
+# realizar análisis de datos y generar informes. 
+# El programa continúa ejecutándose hasta que el usuario elija salir
 def mostrar_menu():
-    listaExperimentos = []
     while True:
-    #muestra el menu principal del programa. difiultad 1
-        print("====menu principal=====")
-        print("===gestios de experimentos===")
+        print("\n==== Menú Principal ====")
+        print("=== Gestión de Experimentos ===")
         print("1. Agregar experimento")
-        print("2. Eliminar experimentos ")
-        print("3. Visualizar experimentos")
-        print("====analisis de datos=====")
-        print("4. calcular estadisticas")
-        print("5. comparar experimentos")
-        print("====generar informe=====")
-        print("6. generar informe")
-        print("7. salir")
+        print("2. Visualizar experimentos")
+        print("3. Eliminar experimento")
+        print("=== Análisis de Datos ===")
+        print("4. Calcular estadísticas")
+        print("5. Comparar experimentos")
+        print("=== Generar Informe ===")
+        print("6. Generar informe")
+        print("7. Salir")
 
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            agregar_experimento(listaExperimentos)
-        elif opcion  == "2":
-            eliminar_experimento(listaExperimentos)
+            agregar_experimento(listaDeExperimentos)
+        elif opcion == "2":
+            visualizar_experimentos(listaDeExperimentos)
         elif opcion == "3":
-            visualizar_experimentos(listaExperimentos)
+            eliminar_experimento(listaDeExperimentos)
         elif opcion == "4":
-            calcular_estadisticasExperimento(listaExperimentos)
+            calcular_estadisticasExperimento(listaDeExperimentos)
         elif opcion == "5":
-            comparar_experimentos(listaExperimentos)
+            comparar_experimentos(listaDeExperimentos)
         elif opcion == "6":
-            generar_informe(listaExperimentos)  
-        elif opcion == "7":     
+            generar_informe(listaDeExperimentos)
+        elif opcion == "7":
+            print("Saliendo del programa...")
             break
         else:
-            print("Error: opción inválida.")
-
+            print("Error: Opción inválida.")
 
 if __name__ == "__main__":
     mostrar_menu()
